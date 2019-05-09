@@ -25,6 +25,7 @@ public class unitConversion {
 			unit = "ML";
 			break;
 		case "CUP":
+		case "CUPS":
 			amount *= 240.0;
 			unit = "ML";
 			break;

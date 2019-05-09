@@ -9,13 +9,17 @@ import org.jsoup.nodes.Element;
 
 import webScrape.Fraction;
 //git testing testing
+import webScrape.unitConversion;
 
 
 public class BudgetBytes {
 	public ArrayList <String> name = new ArrayList<String>();
 	public ArrayList <String> unit = new ArrayList<String>();
+	public ArrayList <String> unitMl = new ArrayList<String>();
 	public ArrayList<String> amountString = new ArrayList<String>();
 	public ArrayList<Double> amount = new ArrayList<Double>();
+	public ArrayList<Double> amountMl = new ArrayList<Double>();
+	
 	
 	public BudgetBytes(String url) {
 		try {
@@ -31,13 +35,15 @@ public class BudgetBytes {
 			
 			//calls fraction object to convert fractions to doubles
 			for(int i = 0; i < amountString.size(); i++) {
-				if(isNumeric(amountString.get(i))) {
+				if(!isNumeric(amountString.get(i)) && !amountString.get(i).equals("")) {
 					Fraction frac = new Fraction(amountString.get(i));
-					amount.add(frac.getConversion());
+					amount.add(i, frac.getConversion());
+				}
+				else if(amountString.get(i).equals("")) {
+					amount.add(1.0);
 				}
 				else {
-					unit.set(i, amountString.get(i).toUpperCase());
-					amount.add(1.0);
+					amount.add(Double.parseDouble(amountString.get(i)));
 				}
 					
 			}
@@ -45,6 +51,16 @@ public class BudgetBytes {
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	public BaseRecipe getBase() {
+		for(int i = 0; i < amount.size(); i++) {
+			unitConversion convert = new unitConversion(unit.get(i), amount.get(i));
+			amountMl.add(convert.toMl());
+			unitMl.add(convert.unit);
+		}
+		BaseRecipe base = new BaseRecipe(name, amountMl, unitMl);
+		return base;
 	}
 	
 	public static boolean isNumeric(String strNum) {
