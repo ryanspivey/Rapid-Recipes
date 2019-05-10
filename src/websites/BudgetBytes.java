@@ -1,5 +1,6 @@
 package websites;
 
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,9 +11,10 @@ import org.jsoup.nodes.Element;
 import webScrape.Fraction;
 //git testing testing
 import webScrape.unitConversion;
-
+import webScrape.unitConversion;
 
 public class BudgetBytes {
+	public BaseRecipe base;
 	public ArrayList <String> name = new ArrayList<String>();
 	public ArrayList <String> unit = new ArrayList<String>();
 	public ArrayList <String> unitMl = new ArrayList<String>();
@@ -35,9 +37,24 @@ public class BudgetBytes {
 			
 			//calls fraction object to convert fractions to doubles
 			for(int i = 0; i < amountString.size(); i++) {
-				if(!isNumeric(amountString.get(i)) && !amountString.get(i).equals("")) {
-					Fraction frac = new Fraction(amountString.get(i));
-					amount.add(i, frac.getConversion());
+				if(amountString.get(i).contains("/")) {
+					try {
+						Fraction frac = new Fraction(amountString.get(i));
+						amount.add(i, frac.getConversion());
+					}
+					catch(NumberFormatException e){
+						e.printStackTrace();
+					}
+				}
+				else if(amountString.get(i).contains(" ")) {
+					try {
+						String[] array = amountString.get(i).split(" ");
+						amount.add(Double.parseDouble(array[0]));
+						unit.set(i, array[1]);
+					}
+					catch(Exception e) {
+						System.out.print("Invalid Amount");
+					}
 				}
 				else if(amountString.get(i).equals("")) {
 					amount.add(1.0);
@@ -51,17 +68,14 @@ public class BudgetBytes {
 		catch(Exception e){
 			e.printStackTrace();
 		}
-	}
-	
-	public BaseRecipe getBase() {
 		for(int i = 0; i < amount.size(); i++) {
 			unitConversion convert = new unitConversion(unit.get(i), amount.get(i));
 			amountMl.add(convert.toMl());
 			unitMl.add(convert.unit);
 		}
-		BaseRecipe base = new BaseRecipe(name, amountMl, unitMl);
-		return base;
+		base = new BaseRecipe(name, amountMl, unitMl);
 	}
+
 	
 	public static boolean isNumeric(String strNum) {
 	    try {
@@ -71,6 +85,7 @@ public class BudgetBytes {
 	    }
 	    return true;
 	}
+
 	
 	public String toString() {
 		String list = "";

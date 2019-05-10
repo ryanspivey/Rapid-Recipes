@@ -12,7 +12,10 @@ public class BaseRecipe {
 		this.amount = amount;
 		this.unit = unit;
 	}
-
+	
+	public int getIngredientNum() {
+		return ingredient.size();
+	}
 
 	public ArrayList<String> getIngredient() {
 		return ingredient;
