@@ -60,38 +60,60 @@ public class Stacker {
 	public static void getDuplicates(ArrayList<String> list) {
 		ArrayList<String> ingredientSearch = new ArrayList<String>();
 		ArrayList<String> distinctIngredients = new ArrayList<String>();
+		ArrayList<Integer> indexOfDups = new ArrayList<Integer>();
+		ArrayList<Integer> indexOfOgs = new ArrayList<Integer>();
+		
 		distinctIngredients.addAll(ingredients);
 		ingredientSearch.addAll(ingredients);
 		Collections.reverse(ingredientSearch);
 		int dups = 0;
+		int index = 0;
+		int counter = 0;
+		int counter2 = 0;
 		
 		for(String ingredient : ingredients) {
 			ingredientSearch.remove(ingredientSearch.size()-1);
+			counter++;
+			counter2 = 0;
 			for(String ingredient2 : ingredientSearch) {
 				SimilarityStrategy strategy = new JaroWinklerStrategy();
 				StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
 				double score = service.score(ingredient, ingredient2);
+				counter2++;
 				
 				if(score > 0.80) {
-					dups += 1;
+					dups++;
 					System.out.println(dups + " " + ingredient + " " + ingredient2);
-					int temp = distinctIngredients.indexOf(ingredient);
-					int temp2 = distinctIngredients.indexOf(ingredient2);
-					distinctIngredients.remove(ingredient2);
-					units.remove(temp2);
-					amounts.set(temp, 99 * (amounts.get(temp) + amounts.get(temp2)));
+					int temp = counter;
+					int temp2 = ingredientSearch.size() - counter2;
+					
+					System.out.println(temp + "shittt" + counter2 +  " " + ingredientSearch.size() + "\n\n\n");
+					System.out.println(amounts.get(temp));
+					System.out.println(amounts.get(temp2));
+					
+					indexOfOgs.add(temp-1);
+					indexOfDups.add(indexOfDups.size(), temp2);
+					
+					amounts.set(indexOfOgs.get(index), 999 * (amounts.get(temp) + amounts.get(indexOfDups.get(index))));
 					amounts.set(temp2, -2.0);
-					System.out.println(amounts.size());
-					System.out.println(units.size());
+					index++;
 					
 				}
 			}
+		}
+		//Collections.reverse(indexOfDups);
+		
+		for(int i = 0; i < indexOfDups.size(); i++) {
+			System.out.println(ingredients.get(indexOfOgs.get(i)));
+			System.out.println(indexOfOgs.toString());
+			System.out.println(ingredients.get(indexOfDups.get(i)));
+			System.out.println(indexOfDups.toString());
 		}
 
 		System.out.println(amounts.toString());
 		System.out.println(distinctIngredients.toString());
 		for(int i = 0; i < distinctIngredients.size(); i++) {
-			System.out.println("\nIngredient: " + distinctIngredients.get(i) + "\nUnit:" + units.get(i) + "\nAmounts: " + amounts.get(i));
+			System.out.println(i + "\nIngredient: " + distinctIngredients.get(i) + "\nUnit:" + units.get(i) + "\nAmounts: " + amounts.get(i));
 		}
 		
 		
