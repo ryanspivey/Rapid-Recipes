@@ -19,7 +19,7 @@ A web crawler that pulls data from common recipe sites and curates a grocery lis
 
 - [ ] Major Clean Up
 - [ ] Use common schema for scraping data from recipe sites (AnyList uses this)
-- [ ] Combine amounts of combined ingredients
+- [x] Combine amounts of combined ingredients
 - [x] Write method to compare all ingredients within BaseRecipes & combine ingredients based on similarities
 - [x] Make unit conversion object for common kitchen measurements.
 - [x] Make fraction converter for recipe entries as fractions (i.e. 1/4 cup)
