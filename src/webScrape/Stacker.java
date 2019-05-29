@@ -13,7 +13,9 @@ import net.ricecode.similarity.StringSimilarityServiceImpl;
 
 
 public class Stacker {
-	ArrayList<BaseRecipe> list = new ArrayList<BaseRecipe>();
+	public static ArrayList<BaseRecipe> recipes = new ArrayList<BaseRecipe>();
+	public static ArrayList<Ingredient> allIng = new ArrayList<Ingredient>();
+	public static ArrayList<Ingredient> allIngFix = new ArrayList<Ingredient>();
 	
 	
 	public static ArrayList<String> ingredients = new ArrayList<String>();
@@ -23,129 +25,54 @@ public class Stacker {
 	public static String ingredientCompare;
 	
 	public Stacker(ArrayList<BaseRecipe> list) {
-		this.list = list;
-		for(int i = 0; i < list.size(); i++) {
-			ingredients.addAll(list.get(i).getIngredient());
-			units.addAll(list.get(i).getUnit());
-			amounts.addAll(list.get(i).getAmount());
+		Stacker.recipes = list;
+		
+		for(int i = 0; i < recipes.size(); i++) {
+			for(int j = 0; j < recipes.get(i).getIngredients().size(); j++) {
+				allIng.add(recipes.get(i).getIngredient(j));
+			}
 		}
-		getDuplicates(ingredients);
+		for(int i = 0; i < allIng.size(); i++) {
+			System.out.println(allIng.get(i).getName() + allIng.get(i).getAmount() + allIng.get(i).getUnit());
+		}
+		System.out.println("shit");
+		getDuplicates();
+	}
+	
+	
+	public static void getDuplicates() {
+		for(int i = 0; i < allIng.size(); i++) {
+			allIngFix.add(allIng.get(i));
+			for(int j = i + 1; j < allIng.size(); j++) {
+					SimilarityStrategy strategy = new JaroWinklerStrategy();
+					StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
+					String target = allIng.get(i).getName();
+					String source = allIng.get(j).getName();
+					if(service.score(target, source) > 0.87) {
+						//if its higher than 85 add amount of j to i then only add i to the list, if its not higher than 85, add both i and j to the list.
+						allIngFix.set(i, new Ingredient(target, (allIng.get(i).getAmount() + allIng.get(j).getAmount()), allIng.get(i).getUnit()));
+						allIng.set(j, new Ingredient("-1", -1.0, "-1"));
+					}		
+			}
+		}
+		
+		ArrayList<Ingredient> found = new ArrayList<Ingredient>();
+		for(Ingredient ing : allIngFix) {
+			if(ing.getName().equals("-1")) {
+				found.add(ing);
+			}
+		}
+		allIngFix.removeAll(found);
+		
+		for(int i = 0; i < allIngFix.size(); i++) {
+			System.out.println("\nIngredient :" + allIngFix.get(i).getName() + "\nAmount :" + allIngFix.get(i).getAmount() + "\nUnit :" + allIngFix.get(i).getUnit());
+		}
+		
+	}
 
-		
-	}
-	
-	/*
-	public void findDupes() {
-		SimilarityStrategy strategy = new JaroWinklerStrategy();
-		
-		System.out.println(score);
-		
-		HashSet<String> map = new HashSet<String>();
-		for(int i = 0; i < list.size(); i++) {
-			for(int j = 0; j < list.get(i).getIngredientNum(); j++) {
-				if(list.get(i).getIngredient().contains()) {	
-					map.add(list.get(i).getIngredient().get(j));
-				}
-					
-			}
-		}
-		String target = "KING ";
-		String source = "BREAD FLOUR";
-		StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
-		double score = service.score(source, target);
-		
-	}
-	*/
-	
-	public static void getDuplicates(ArrayList<String> list) {
-		ArrayList<String> ingredientSearch = new ArrayList<String>();
-		ArrayList<String> distinctIngredients = new ArrayList<String>();
-		ArrayList<Integer> indexOfDups = new ArrayList<Integer>();
-		ArrayList<Integer> indexOfOgs = new ArrayList<Integer>();
-		
-		distinctIngredients.addAll(ingredients);
-		ingredientSearch.addAll(ingredients);
-		Collections.reverse(ingredientSearch);
-		int dups = 0;
-		int index = 0;
-		int counter = 0;
-		int counter2 = 0;
-		
-		for(String ingredient : ingredients) {
-			ingredientSearch.remove(ingredientSearch.size()-1);
-			counter++;
-			counter2 = 0;
-			for(String ingredient2 : ingredientSearch) {
-				SimilarityStrategy strategy = new JaroWinklerStrategy();
-				StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
-				double score = service.score(ingredient, ingredient2);
-				counter2++;
-				
-				if(score > 0.80) {
-					dups++;
-					System.out.println(dups + " " + ingredient + " " + ingredient2);
-					int temp = counter;
-					int temp2 = ingredientSearch.size() - counter2;
-					
-					System.out.println(temp + "shittt" + counter2 +  " " + ingredientSearch.size() + "\n\n\n");
-					System.out.println(amounts.get(temp));
-					System.out.println(amounts.get(temp2));
-					
-					indexOfOgs.add(temp-1);
-					indexOfDups.add(indexOfDups.size(), temp2);
-					
-					amounts.set(indexOfOgs.get(index), 999 * (amounts.get(temp) + amounts.get(indexOfDups.get(index))));
-					amounts.set(temp2, -2.0);
-					index++;
-					
-				}
-			}
-		}
-		//Collections.reverse(indexOfDups);
-		
-		for(int i = 0; i < indexOfDups.size(); i++) {
-			System.out.println(ingredients.get(indexOfOgs.get(i)));
-			System.out.println(indexOfOgs.toString());
-			System.out.println(ingredients.get(indexOfDups.get(i)));
-			System.out.println(indexOfDups.toString());
-		}
-
-		System.out.println(amounts.toString());
-		System.out.println(distinctIngredients.toString());
-		for(int i = 0; i < distinctIngredients.size(); i++) {
-			System.out.println(i + "\nIngredient: " + distinctIngredients.get(i) + "\nUnit:" + units.get(i) + "\nAmounts: " + amounts.get(i));
-		}
-		
-		
-	}
-	
-	
-	/*
-	@Override
-	public boolean equals(Object object) {
-		boolean result = false;
-		if(object == null || object.getClass() != getClass()) {
-			result = false;
-		}
-		else if(object instanceof String){
-			SimilarityStrategy strategy = new JaroWinklerStrategy();
-			StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
-			String target = (String) object;
-			String source = ingredientCompare;
-			double score = service.score(source, target);
-			if(score > 0.85) {
-				System.out.println("shit");
-				result = true;
-			}
-		}
-		return result;
-	}
-	*/
 	
 	public ArrayList<BaseRecipe> getRecipes() {
-		return list;
+		return recipes;
 	}
-	
-	
 	
 }

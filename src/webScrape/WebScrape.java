@@ -19,27 +19,23 @@ public class WebScrape {
 		Scanner scan= new Scanner(System.in);
 		String url = "";
 		ArrayList<BaseRecipe> bases = new ArrayList<BaseRecipe>();
-		
 		while(!url.equals("-1")) {
 			url = scan.next();
 			if(!url.equals("-1")) {
 				BudgetBytes link = new BudgetBytes(url);
-				bases.add(link.base);
+				bases.add(link.getBase());
 			}
 			else {
 				break;
 			}
 		}
-			Stacker stack = new Stacker(bases);
+		Stacker stack = new Stacker(bases);
+			
 			
 		}
 		
 		
-		SimilarityStrategy strategy = new JaroWinklerStrategy();
-		String target = "KING ";
-		String source = "BREAD FLOUR";
-		StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
-	
+		
 		
 		
 		

@@ -1,49 +1,51 @@
 package websites;
 import java.util.ArrayList;
+import java.util.Collections;
+
+import webScrape.Ingredient;
 
 public class BaseRecipe {
-	ArrayList<String> ingredient = new ArrayList<String>();
-	ArrayList<Double> amount = new ArrayList<Double>();
-	ArrayList<String> unit = new ArrayList<String>();
-	
-	
-	public BaseRecipe(ArrayList<String> ingredient, ArrayList<Double> amount, ArrayList<String> unit) {
-		this.ingredient = ingredient;
-		this.amount = amount;
-		this.unit = unit;
+	ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
+	ArrayList<Ingredient> reversedIngredients = ingredients;
+
+	public BaseRecipe(ArrayList<Ingredient> ingredients) {
+		this.ingredients = ingredients;
+		for(int i = 0; i < ingredients.size(); i++) {
+			//System.out.println(ingredients.get(i).getName() + " " + ingredients.get(i).getUnit() + " " + ingredients.get(i).getAmount() + " ");
+		}
 	}
 	
-	public int getIngredientNum() {
-		return ingredient.size();
+	public ArrayList<Ingredient> getIngredients(){
+		return ingredients;
 	}
-
-	public ArrayList<String> getIngredient() {
-		return ingredient;
+	
+	public ArrayList<Ingredient> getReversedIngredients(){
+		Collections.reverse(reversedIngredients);
+		return reversedIngredients;
 	}
-
-
-	public void setIngredient(ArrayList<String> ingredient) {
-		this.ingredient = ingredient;
+	
+	public void setIngredient(String ingredient, int i) {
+		ingredients.get(i).setName(ingredient);
 	}
-
-
-	public ArrayList<Double> getAmount() {
-		return amount;
+	
+	public Ingredient getIngredient(int i) {
+		return ingredients.get(i);
 	}
-
-
-	public void setAmount(ArrayList<Double> amount) {
-		this.amount = amount;
+	
+	public void setUnit(String unit, int i) {
+		ingredients.get(i).setUnit(unit);
 	}
-
-
-	public ArrayList<String> getUnit() {
-		return unit;
+	
+	public String getUnit(int i) {
+		return ingredients.get(i).getUnit();
 	}
-
-
-	public void setUnit(ArrayList<String> unit) {
-		this.unit = unit;
+	
+	public void setAmount(Double amount, int i) {
+		ingredients.get(i).setAmount(amount);
+	}
+	
+	public Double getAmount(int i) {
+		return ingredients.get(i).getAmount();
 	}
 	
 }

@@ -9,6 +9,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import webScrape.Fraction;
+import webScrape.Ingredient;
 //git testing testing
 import webScrape.unitConversion;
 import webScrape.unitConversion;
@@ -21,6 +22,7 @@ public class BudgetBytes {
 	public ArrayList<String> amountString = new ArrayList<String>();
 	public ArrayList<Double> amount = new ArrayList<Double>();
 	public ArrayList<Double> amountMl = new ArrayList<Double>();
+	ArrayList<Ingredient> ingredients = new ArrayList<Ingredient>();
 	
 	
 	public BudgetBytes(String url) {
@@ -70,22 +72,16 @@ public class BudgetBytes {
 		}
 		for(int i = 0; i < amount.size(); i++) {
 			unitConversion convert = new unitConversion(unit.get(i), amount.get(i));
-			amountMl.add(convert.toMl());
-			unitMl.add(convert.unit);
+			ingredients.add(new Ingredient(name.get(i), convert.toMl(), convert.unit));
 		}
-		base = new BaseRecipe(name, amountMl, unitMl);
+		base = new BaseRecipe(ingredients);
+	}
+	
+	public BaseRecipe getBase() {
+		return base;
 	}
 
 	
-	public static boolean isNumeric(String strNum) {
-	    try {
-	        double d = Double.parseDouble(strNum);
-	    } catch (NumberFormatException | NullPointerException nfe) {
-	        return false;
-	    }
-	    return true;
-	}
-
 	
 	public String toString() {
 		String list = "";
