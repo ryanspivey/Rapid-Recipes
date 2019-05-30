@@ -6,9 +6,10 @@ public class Ingredient {
 	Double amount;
 	
 	public Ingredient(String name, Double amount, String unit) {
-	this.unit = unit;
-	this.name = name;
-	this.amount = amount;
+		this.unit = unit;
+		this.name = name;
+		this.amount = amount;
+		unit.replaceAll("[^a-zA-Z]", "");
 	}
 
 	/**

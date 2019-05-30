@@ -17,13 +17,6 @@ public class Stacker {
 	public static ArrayList<Ingredient> allIng = new ArrayList<Ingredient>();
 	public static ArrayList<Ingredient> allIngFix = new ArrayList<Ingredient>();
 	
-	
-	public static ArrayList<String> ingredients = new ArrayList<String>();
-	public static ArrayList<String> units = new ArrayList<String>();
-	public static ArrayList<Double> amounts = new ArrayList<Double>();
-	
-	public static String ingredientCompare;
-	
 	public Stacker(ArrayList<BaseRecipe> list) {
 		Stacker.recipes = list;
 		
@@ -37,19 +30,24 @@ public class Stacker {
 		}
 		System.out.println("shit");
 		getDuplicates();
+		
+		for(int i = 0; i < allIngFix.size(); i++) {
+			System.out.println("\nIngredient :" + allIngFix.get(i).getName() + "\nAmount :" + allIngFix.get(i).getAmount() + "\nUnit :" + allIngFix.get(i).getUnit());
+		}
 	}
 	
 	
 	public static void getDuplicates() {
+		SimilarityStrategy strategy = new JaroWinklerStrategy();
+		StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
+		
 		for(int i = 0; i < allIng.size(); i++) {
 			allIngFix.add(allIng.get(i));
 			for(int j = i + 1; j < allIng.size(); j++) {
-					SimilarityStrategy strategy = new JaroWinklerStrategy();
-					StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
 					String target = allIng.get(i).getName();
 					String source = allIng.get(j).getName();
-					if(service.score(target, source) > 0.87) {
-						//if its higher than 85 add amount of j to i then only add i to the list, if its not higher than 85, add both i and j to the list.
+					if(service.score(target, source) > 0.85 ) {
+						//if its higher than 85, set the amount of i index  as i + j amounts.
 						allIngFix.set(i, new Ingredient(target, (allIng.get(i).getAmount() + allIng.get(j).getAmount()), allIng.get(i).getUnit()));
 						allIng.set(j, new Ingredient("-1", -1.0, "-1"));
 					}		
@@ -62,11 +60,9 @@ public class Stacker {
 				found.add(ing);
 			}
 		}
+		System.out.println(allIngFix.size());
 		allIngFix.removeAll(found);
-		
-		for(int i = 0; i < allIngFix.size(); i++) {
-			System.out.println("\nIngredient :" + allIngFix.get(i).getName() + "\nAmount :" + allIngFix.get(i).getAmount() + "\nUnit :" + allIngFix.get(i).getUnit());
-		}
+		System.out.println(allIngFix.size());
 		
 	}
 
