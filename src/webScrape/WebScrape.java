@@ -3,10 +3,6 @@ package webScrape;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import net.ricecode.similarity.JaroWinklerStrategy;
-import net.ricecode.similarity.SimilarityStrategy;
-import net.ricecode.similarity.StringSimilarityService;
-import net.ricecode.similarity.StringSimilarityServiceImpl;
 import websites.BaseRecipe;
 import websites.BudgetBytes;
 
@@ -31,18 +27,11 @@ public class WebScrape {
 		}
 		Stacker stack = new Stacker(bases);
 			
-			
+		scan.close();
 		}
 		
 		
-		
-		
-		
-		
-		//for(int i = 0; i < link.unit.size(); i++) {
-		//	unitConversion convert = new unitConversion(link.unit.get(i), link.amount.get(i));
-		//	System.out.println("Ingredient: " + link.getBase().getIngredient().get(i) + "\nAmount:" + link.getBase().getAmount().get(i) + "\nUnit: " + link.getBase().getUnit().get(i) + "\n\n");
-		//}
+
 		
 
 }
