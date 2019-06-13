@@ -3,6 +3,7 @@ package webScrape;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 import websites.BaseRecipe;
@@ -38,7 +39,9 @@ public class Stacker {
 	
 	
 	public static void getDuplicates() {
-		SimilarityStrategy strategy = new JaroWinklerStrategy();
+		String userInput = "";
+		Scanner scan = new Scanner(System.in);
+	    SimilarityStrategy strategy = new JaroWinklerStrategy();
 		StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
 		
 		for(int i = 0; i < allIng.size(); i++) {
@@ -46,11 +49,20 @@ public class Stacker {
 			for(int j = i + 1; j < allIng.size(); j++) {
 					String target = allIng.get(i).getName();
 					String source = allIng.get(j).getName();
-					if(service.score(target, source) > 0.85 ) {
+					if(service.score(target, source) > 0.90) {
 						//if its higher than 85, set the amount of i index  as i + j amounts.
-						allIngFix.set(i, new Ingredient(target, (allIng.get(i).getAmount() + allIng.get(j).getAmount()), allIng.get(i).getUnit()));
-						allIng.set(j, new Ingredient("-1", -1.0, "-1"));
-					}		
+						allIngFix.add(j, new Ingredient(target, (allIng.get(i).getAmount() + allIng.get(j).getAmount()), allIng.get(i).getUnit()));
+						allIng.set(i, new Ingredient("-1", -1.0, "-1"));
+					}
+					else if(service.score(target, source) > 0.80 && service.score(target, source) < 0.90) {
+					    System.out.println("Should these ingredients be combined (Y/N) :\n" + target + " & " + source);
+					    userInput = scan.next();
+					    if(userInput.equals("Y")) {
+					        allIngFix.add(j, new Ingredient(target, (allIng.get(i).getAmount() + allIng.get(j).getAmount()), allIng.get(i).getUnit()));
+	                        allIng.set(i, new Ingredient("-1", -1.0, "-1"));
+					    }
+					    
+					}
 			}
 		}
 		
@@ -64,6 +76,13 @@ public class Stacker {
 		allIngFix.removeAll(found);
 		System.out.println(allIngFix.size());
 		
+	}
+	
+	private void addObject(int i, Object object, ArrayList list) {
+	    while(list.size() < i) {
+	        list.add(list.size(), null);
+	    }
+	    list.add(i, object);
 	}
 
 	
