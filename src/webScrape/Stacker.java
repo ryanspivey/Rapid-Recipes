@@ -1,6 +1,7 @@
 package webScrape;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import websites.BaseRecipe;
 import net.ricecode.similarity.JaroWinklerStrategy;
@@ -35,7 +36,7 @@ public class Stacker {
 	
 	
 	public static void getDuplicates() {
-		SimilarityStrategy strategy = new JaroWinklerStrategy();
+		/*SimilarityStrategy strategy = new JaroWinklerStrategy();
 		StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
 		
 		//adds every element (index i of list) to a list 
@@ -62,10 +63,23 @@ public class Stacker {
 			}
 		}
 		System.out.println(allIngFix.size());
-		
-		//remove the entire found list from the ing list
+		//remove the entire (-1)found list from the ingredient list
 		allIngFix.removeAll(found);
 		System.out.println(allIngFix.size());
+		*/
+		allIng.sort();
+	}
+	
+	public static class StringComparator implements Comparator<Ingredient>{
+		@Override
+		public int compare(Ingredient ing1, Ingredient ing2) {
+			SimilarityStrategy strategy = new JaroWinklerStrategy();
+			StringSimilarityService service = new StringSimilarityServiceImpl(strategy);
+			String target = ing1.getName();
+			String source = ing2.getName();
+			
+			return service.score(target, source).compareTo(0.80);
+		}
 		
 	}
 
