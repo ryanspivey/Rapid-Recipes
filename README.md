@@ -19,6 +19,7 @@ A web crawler that pulls data from common recipe sites and curates a grocery lis
 
 - [ ] Major Clean Up
 - [ ] Use common schema for scraping data from recipe sites (AnyList uses this)
+- [x] Got basic utility of stacker working (adds amounts of duplicate ingredients & removes duplicates from list) (bane of my existence, algorithms r dum)
 - [x] Combine amounts of combined ingredients
 - [x] Write method to compare all ingredients within BaseRecipes & combine ingredients based on similarities
 - [x] Make unit conversion object for common kitchen measurements.
