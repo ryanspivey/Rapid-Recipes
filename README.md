@@ -1,4 +1,6 @@
 # RapidRecipes
+
+![alt text](https://repository-images.githubusercontent.com/185689854/7886fc80-8d60-11e9-87e6-cab780dc9d5e)
 A web crawler that pulls data from common recipe sites and curates a grocery list based on provided links.
 
 <h2>*(VERY DIRTY CODE ALERT)*</h2>
