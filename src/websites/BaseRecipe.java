@@ -39,4 +39,8 @@ public class BaseRecipe {
 		return ingredients.get(i).getAmount();
 	}
 	
+	public int size() {
+		return ingredients.size();
+	}
+	
 }
